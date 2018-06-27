@@ -6,6 +6,10 @@ class Player {
     this.score = 0
   }
 
+  drop() {
+    this.position.y++
+  }
+
   move(direction) {
     this.position.x += direction
   }
