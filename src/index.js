@@ -5,6 +5,7 @@ const context = canvas.getContext('2d')
 
 context.scale(20, 20)
 
+let requestAnimationID
 const player = new Player
 
 const matrix = [
@@ -33,21 +34,48 @@ const drawMatrix = (matrix, offset) => {
   })
 }
 
+let lastTime = 0
+
+const update = (time = 0) => {
+  const deltaTime = time - lastTime
+  lastTime = time
+  player.update(deltaTime)
+
+  draw()
+  requestAnimationID = requestAnimationFrame(update)
+}
+
+const start = () => {
+  if (!requestAnimationID) {
+    requestAnimationID = requestAnimationFrame(update)
+  }
+}
+
+const pause = () => {
+  if (requestAnimationID) {
+    cancelAnimationFrame(requestAnimationID)
+    requestAnimationID = undefined
+    return
+  }
+
+  start()
+}
+
 document.addEventListener('keydown', event => {
   switch (event.keyCode) {
     case (39):
       player.move(+1)
-      draw()
       break
     case (37):
       player.move(-1)
-      draw()
       break
     case (40):
       player.drop()
-      draw()
+      break
+    case (80):
+      pause()
       break
   }
 })
 
-draw()
+start()
