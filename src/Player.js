@@ -5,6 +5,10 @@ class Player {
     this.matrix = null
     this.score = 0
   }
+
+  move(direction) {
+    this.position.x += direction
+  }
 }
 
 export default Player
