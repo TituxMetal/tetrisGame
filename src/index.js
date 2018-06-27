@@ -33,4 +33,17 @@ const drawMatrix = (matrix, offset) => {
   })
 }
 
+document.addEventListener('keydown', event => {
+  switch (event.keyCode) {
+    case (39):
+      player.move(+1)
+      draw()
+      break
+    case (37):
+      player.move(-1)
+      draw()
+      break
+  }
+})
+
 draw()
