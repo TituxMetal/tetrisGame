@@ -1,7 +1,11 @@
+import Player from './Player'
+
 const canvas = document.getElementById('tetris')
 const context = canvas.getContext('2d')
 
 context.scale(20, 20)
+
+const player = new Player
 
 const matrix = [
   [0, 0, 0],
@@ -9,11 +13,7 @@ const matrix = [
   [0, 1, 0]
 ]
 
-const player = {
-  position: { x: 0, y: 0 },
-  matrix,
-  score: 0
-}
+player.matrix = matrix
 
 const draw = () => {
   context.fillStyle = '#444'
