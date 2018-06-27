@@ -43,6 +43,10 @@ document.addEventListener('keydown', event => {
       player.move(-1)
       draw()
       break
+    case (40):
+      player.drop()
+      draw()
+      break
   }
 })
 
