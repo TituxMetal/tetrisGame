@@ -11,6 +11,7 @@ class Piece {
       '#3877FF'
     ]
     this.pieces = 'IJLOSTZ'
+    this.random = []
   }
 
   createPiece(type) {
@@ -61,9 +62,18 @@ class Piece {
   }
 
   getRandomPiece() {
-    const random = this.pieces[this.pieces.length * Math.random() | 0]
+    if (this.random.length < 1) {
+      while (this.random.length < this.pieces.length - 1) {
+        this.random.push(this.pieces[this.pieces.length * Math.random() | 0])
+        this.random = this.random.filter((v, i, a) => a.indexOf(v) === i)
+      }
+    }
 
-    return this.createPiece(random)
+    const rdm = this.random[this.random.length * Math.random() | 0]
+
+    this.random.splice(this.random.indexOf(rdm), 1)
+
+    return this.createPiece(rdm)
   }
 }
 
