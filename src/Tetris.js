@@ -10,11 +10,11 @@ class Tetris {
     this.lastTime = 0
     this.piece = new Piece
     this.player = new Player(this)
-    this.player.matrix = this.piece.getRandomPiece()
     this.requestAnimationID = undefined
     this.scale = 20
 
     this.context.scale(this.scale, this.scale)
+    this.player.reset()
     this.start()
   }
 
@@ -22,6 +22,7 @@ class Tetris {
     this.context.fillStyle = '#444'
 
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height)
+    this.drawMatrix(this.arena.matrix, { x: 0, y: 0 })
     this.drawMatrix(this.player.matrix, this.player.position)
   }
 
