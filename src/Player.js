@@ -3,17 +3,22 @@ class Player {
     this.arena = tetris.arena
     this.dropCounter = 0
     this.dropInterval = 900
+    this.piece = tetris.piece
+    this.matrix = this.piece.getRandomPiece()
     this.position = { x: 0, y: 0 }
     this.score = 0
   }
 
   drop() {
     this.position.y++
-    this.dropCounter = 0
-
+    
     if (this.arena.collide(this)) {
       this.position.y--
+      this.arena.merge(this)
+      this.reset()
     }
+
+    this.dropCounter = 0
   }
 
   move(direction) {
@@ -21,6 +26,19 @@ class Player {
 
     if (this.arena.collide(this)) {
       this.position.x -= direction
+    }
+  }
+
+  reset() {
+    const newPiece = this.piece.getRandomPiece()
+    this.matrix = newPiece
+    const arenaMiddle = this.arena.matrix[0].length / 2 | 0
+    const pieceMiddle = this.matrix[0].length / 2 | 0
+    this.position.y = 0
+    this.position.x = arenaMiddle - pieceMiddle
+
+    if (this.arena.collide(this)) {
+      this.arena.matrix.forEach(row => row.fill(0))
     }
   }
 
