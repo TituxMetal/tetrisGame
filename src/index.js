@@ -1,12 +1,6 @@
 import Tetris from './Tetris'
 
-const matrix = [
-  [0, 0, 0],
-  [1, 1, 1],
-  [0, 1, 0]
-]
-
-const tetris = new Tetris(document.getElementById('tetris'), matrix)
+const tetris = new Tetris(document.getElementById('tetris'))
 
 document.addEventListener('keydown', event => {
   switch (event.keyCode) {
