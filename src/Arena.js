@@ -24,6 +24,16 @@ class Arena {
 
     return false
   }
+
+  merge(player) {
+    player.matrix.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value !== 0) {
+          this.matrix[y + player.position.y][x + player.position.x] = value
+        }
+      })
+    })
+  }
 }
 
 export default Arena
