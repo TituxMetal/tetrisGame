@@ -1,11 +1,9 @@
 class Player {
-
   constructor(tetris) {
+    this.arena = tetris.arena
     this.dropCounter = 0
     this.dropInterval = 900
     this.position = { x: 0, y: 0 }
-    this.matrix = null
-    this.arena = tetris.arena
     this.score = 0
   }
 
@@ -29,6 +27,7 @@ class Player {
   rotate(dir) {
     const pos = this.position.x
     let offset = 1
+
     this.rotateMatrix(dir)
 
     while (this.arena.collide(this)) {
