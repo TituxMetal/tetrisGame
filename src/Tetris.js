@@ -1,16 +1,18 @@
 import Arena from './Arena'
 import Player from './Player';
+import Piece from './Piece';
 
 class Tetris {
-  constructor(canvas, matrix) {
+  constructor(canvas) {
+    this.arena = new Arena(12, 20)
     this.canvas = canvas
     this.context = canvas.getContext('2d')
-    this.scale = 20
     this.lastTime = 0
-    this.requestAnimationID = undefined
-    this.arena = new Arena(12, 20)
+    this.piece = new Piece
     this.player = new Player(this)
-    this.player.matrix = matrix
+    this.player.matrix = this.piece.getRandomPiece()
+    this.requestAnimationID = undefined
+    this.scale = 20
 
     this.context.scale(this.scale, this.scale)
     this.start()
@@ -18,6 +20,7 @@ class Tetris {
 
   draw() {
     this.context.fillStyle = '#444'
+
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height)
     this.drawMatrix(this.player.matrix, this.player.position)
   }
@@ -26,7 +29,7 @@ class Tetris {
     matrix.forEach((row, y) => {
       row.forEach((value, x) => {
         if (value !== 0) {
-          this.context.fillStyle = 'violet'
+          this.context.fillStyle = this.piece.colors[value]
           this.context.fillRect(x + offset.x, y + offset.y, 1, 1)
         }
       })
