@@ -1,11 +1,16 @@
+import Arena from './Arena'
+import Player from './Player';
+
 class Tetris {
-  constructor(canvas, player) {
+  constructor(canvas, matrix) {
     this.canvas = canvas
     this.context = canvas.getContext('2d')
-    this.scale = 16
+    this.scale = 20
     this.lastTime = 0
     this.requestAnimationID = undefined
-    this.player = player
+    this.arena = new Arena(12, 20)
+    this.player = new Player(this)
+    this.player.matrix = matrix
 
     this.context.scale(this.scale, this.scale)
     this.start()
