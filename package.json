@@ -6,8 +6,8 @@
   "description": "An implementation of the famous Tetris game. I created it entirely in pure Javascript, I use Webpack as the only dependency in development.",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --mode development",
-    "build-prod": "webpack --mode production",
+    "build": "webpack --mode production",
+    "build-dev": "webpack --mode development",
     "start": "webpack-dev-server --mode development --content-base ./dist --host 0.0.0.0 --disable-host-check true"
   },
   "devDependencies": {
