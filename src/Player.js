@@ -16,6 +16,7 @@ class Player {
       this.position.y--
       this.arena.merge(this)
       this.reset()
+      this.arena.sweep()
     }
 
     this.dropCounter = 0
