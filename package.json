@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "src/main.js",
   "author": "Tuxi Metal",
+  "description": "An implementation of the famous Tetris game. I created it entirely in pure Javascript, I use Webpack as the only dependency in development.",
   "license": "MIT",
   "scripts": {
     "build": "webpack --mode development",
