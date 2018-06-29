@@ -1,6 +1,7 @@
 import Tetris from './Tetris'
 
-const tetris = new Tetris(document.getElementById('tetris'))
+const gameElement = document.querySelector('.game');
+const tetris = new Tetris(gameElement)
 
 document.addEventListener('keydown', event => {
   switch (event.keyCode) {
