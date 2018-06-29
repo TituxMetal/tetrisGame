@@ -1,12 +1,14 @@
 class Player {
   constructor(tetris) {
     this.arena = tetris.arena
+    this.defaultInterval = 1000
     this.dropCounter = 0
-    this.dropInterval = 900
+    this.dropInterval = this.defaultInterval
     this.piece = tetris.piece
     this.matrix = this.piece.getRandomPiece()
     this.position = { x: 0, y: 0 }
     this.score = 0
+    this.tetris = tetris
   }
 
   drop() {
@@ -16,7 +18,12 @@ class Player {
       this.position.y--
       this.arena.merge(this)
       this.reset()
-      this.arena.sweep()
+
+      const newScore = this.arena.sweep()
+      this.score += newScore
+      this.dropInterval -= newScore
+
+      this.tetris.updateScore(this.score)
     }
 
     this.dropCounter = 0
@@ -40,6 +47,10 @@ class Player {
 
     if (this.arena.collide(this)) {
       this.arena.matrix.forEach(row => row.fill(0))
+
+      this.score = 0
+      this.dropInterval = this.defaultInterval
+      this.tetris.updateScore()
     }
   }
 
@@ -52,7 +63,7 @@ class Player {
     while (this.arena.collide(this)) {
       this.position.x += offset
       offset = -(offset + (offset > 0 ? 1 : -1))
-      
+
       if (offset > this.matrix[0].length) {
         this.rotateMatrix(-dir)
         this.position.x = pos
