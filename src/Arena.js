@@ -36,6 +36,9 @@ class Arena {
   }
   
   sweep() {
+    let rowCount = 1
+    let score = 0
+
     outer: for (let y = this.matrix.length - 1; y > 0; --y) {
       for (let x = 0; x < this.matrix[y].length; ++x) {
         if (this.matrix[y][x] === 0) {
@@ -44,10 +47,13 @@ class Arena {
       }
 
       const row = this.matrix.splice(y, 1)[0].fill(0)
+      score += rowCount * 10
 
       this.matrix.unshift(row)
       ++y
     }
+
+    return score
   }
 }
 
