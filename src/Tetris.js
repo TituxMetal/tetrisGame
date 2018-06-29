@@ -3,18 +3,20 @@ import Player from './Player';
 import Piece from './Piece';
 
 class Tetris {
-  constructor(canvas) {
+  constructor(element) {
     this.arena = new Arena(12, 20)
-    this.canvas = canvas
-    this.context = canvas.getContext('2d')
+    this.canvas = element.querySelector('canvas')
+    this.context = this.canvas.getContext('2d')
     this.lastTime = 0
     this.piece = new Piece
     this.player = new Player(this)
     this.requestAnimationID = undefined
     this.scale = 20
+    this.scoreElement = element.querySelector('.score')
 
     this.context.scale(this.scale, this.scale)
     this.player.reset()
+    this.updateScore(this.player.score)
     this.start()
   }
 
@@ -61,6 +63,10 @@ class Tetris {
     this.draw()
 
     this.requestAnimationID = requestAnimationFrame(this.update.bind(this))
+  }
+
+  updateScore() {
+    this.scoreElement.innerText = this.player.score
   }
 }
 
