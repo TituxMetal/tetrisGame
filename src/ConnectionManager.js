@@ -21,11 +21,26 @@ class ConnectionManager {
   }
 
   /*
+    Create a new Client with the given id or with a generated id
+  */
+  createClient(connection, id = this.createId()) {
+    return new Client(connection, id)
+  }
+
+  /*
     Create a new Session with the given id or with a generated id
     Add the newly created Session to the list of sessions
   */
   createSession(id = this.createId()) {
-    return new Session(id)
+    if (this.sessions.has(id)) {
+      throw new Error(`Session ${id} already exists`)
+    }
+    
+    const session = new Session(id)
+
+    this.sessions.set(session.id, session)
+
+    return session
   }
 
   /*
@@ -34,7 +49,7 @@ class ConnectionManager {
   */
   disconnect(client) {
     const session = client.getSession()
-
+    
     session.remove(client)
 
     if (session.clients.size === 0) {
@@ -43,21 +58,11 @@ class ConnectionManager {
   }
 
   /*
-    Initialize a new Client to the connection
-  */
-  initClient(connection) {
-    const client = new Client(connection)
-
-    return client
-  }
-
-  /*
     Create a new Session, add the Client to the Session, send a message to the client with the session ID
   */
   initSession(client) {
     const session = this.createSession()
 
-    this.sessions.set(session.id, session)
     session.add(client)
     client.send({ type: 'sessionInitialized', id: session.id })
   }
@@ -72,13 +77,7 @@ class ConnectionManager {
       throw new Error('Client already in session')
     }
 
-    let session = this.sessions.get(id)
-    
-    if (!session) {
-      session = this.createSession(id)
-
-      this.sessions.set(session.id, session)
-    }
+    const session = this.sessions.get(id) || this.createSession(id)
     
     session.add(client)
   }
