@@ -7,6 +7,7 @@ class Tetris {
     this.arena = new Arena(12, 20)
     this.canvas = element.querySelector('canvas')
     this.context = this.canvas.getContext('2d')
+    this.element = element
     this.lastTime = 0
     this.piece = new Piece
     this.player = new Player(this)

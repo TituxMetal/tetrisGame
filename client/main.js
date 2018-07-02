@@ -1,27 +1,30 @@
-import Tetris from './Tetris'
+import TetrisManager from './modules/TetrisManager'
+import ConnectionManager from './modules/ConnectionManager'
 
-const gameElement = document.querySelector('.game');
-const tetris = new Tetris(gameElement)
+const tetrisManager = new TetrisManager(document)
+const localTetris = tetrisManager.createPlayer()
+const connectionManager = new ConnectionManager
+connectionManager.connect('ws://titux.local:9000')
 
 document.addEventListener('keydown', event => {
   switch (event.keyCode) {
     case (39):
-      tetris.player.move(+1)
+      localTetris.player.move(+1)
       break
     case (37):
-      tetris.player.move(-1)
+      localTetris.player.move(-1)
       break
     case (40):
-      tetris.player.drop()
+      localTetris.player.drop()
       break
     case (80):
-      tetris.pause()
+      localTetris.pause()
       break
     case (87):
-      tetris.player.rotate(1)
+      localTetris.player.rotate(1)
       break
     case (88):
-      tetris.player.rotate(-1)
+      localTetris.player.rotate(-1)
       break
   }
 })
