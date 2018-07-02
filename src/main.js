@@ -6,7 +6,7 @@ const server = new WebSocketServer({ port: 9000 })
 const connectionManager = new ConnectionManager()
 
 server.on('connection', connection => {
-  const client = connectionManager.initClient(connection)
+  const client = connectionManager.createClient(connection)
 
   console.log('Connection established and new client created')
 
@@ -34,7 +34,7 @@ server.on('connection', connection => {
     const sessionCount = connectionManager.sessions.size
 
     console.log(
-      `Client disconnected,there is now ${sessionCount} session${sessionCount > 1 ? 's' : ''}`
+      `Client disconnected, there is now ${sessionCount} session${sessionCount > 1 ? 's' : ''}`
     )
   })
 })
