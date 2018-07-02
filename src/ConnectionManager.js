@@ -28,6 +28,10 @@ class ConnectionManager {
     return new Session(id)
   }
 
+  /*
+    Remove the given client from his session
+    If no more client is session remove it
+  */
   disconnect(client) {
     const session = client.getSession()
 
@@ -54,6 +58,7 @@ class ConnectionManager {
     const session = this.createSession()
 
     this.sessions.set(session.id, session)
+    session.add(client)
     client.send({ type: 'sessionInitialized', id: session.id })
   }
 
