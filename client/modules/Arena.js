@@ -1,3 +1,5 @@
+import Events from './Events'
+
 class Arena {
   constructor(width, height) {
     const matrix = []
@@ -6,7 +8,13 @@ class Arena {
       matrix.push(new Array(width).fill(0))
     }
 
+    this.events = new Events
     this.matrix = matrix
+  }
+
+  clear() {
+    this.matrix.forEach(row => row.fill(0))
+    this.events.emit('matrix', this.matrix)
   }
 
   collide(player) {
@@ -33,6 +41,8 @@ class Arena {
         }
       })
     })
+
+    this.events.emit('matrix', this.matrix)
   }
   
   sweep() {
@@ -52,6 +62,8 @@ class Arena {
       this.matrix.unshift(row)
       ++y
     }
+
+    this.events.emit('matrix', this.matrix)
 
     return score
   }
