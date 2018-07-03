@@ -14,7 +14,7 @@ server.on('connection', connection => {
     const data = JSON.parse(message)
     const messageType = data.type
 
-    console.log(`Message received`)
+    console.log(`Message received`, data)
 
     switch (messageType) {
       case ('initSession'):
@@ -24,6 +24,9 @@ server.on('connection', connection => {
       case ('joinSession'):
         connectionManager.joinSession(client, data.id)
         console.log('joinSession Ok')
+        break
+      case ('stateUpdate'):
+        connectionManager.broadcastClient(client, data)
         break
     }
   })
