@@ -3,7 +3,7 @@ import ConnectionManager from './modules/ConnectionManager'
 
 const tetrisManager = new TetrisManager(document)
 const localTetris = tetrisManager.createPlayer()
-const connectionManager = new ConnectionManager
+const connectionManager = new ConnectionManager(tetrisManager)
 connectionManager.connect('ws://titux.local:9000')
 
 document.addEventListener('keydown', event => {
