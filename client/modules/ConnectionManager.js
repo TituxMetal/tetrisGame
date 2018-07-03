@@ -1,6 +1,7 @@
 class ConnectionManager {
   constructor(tetrisManager) {
     this.connection = null
+    this.localTetris = [...tetrisManager.instances][0]
     this.tetrisManager = tetrisManager
     this.peers = new Map
   }
@@ -10,6 +11,7 @@ class ConnectionManager {
     this.connection.addEventListener('open', () => {
       console.log('Connection established')
       this.initSession()
+      this.watchEvents()
     })
 
     this.connection.addEventListener('message', event => {
@@ -64,6 +66,24 @@ class ConnectionManager {
         this.peers.delete(id)
       }
     })
+  }
+
+  watchEvents() {
+    const local = this.localTetris
+    const player = local.player;
+    ['position', 'matrix', 'score'].forEach(key => {
+      player.events.listen(key, value => {
+        this.send({
+          type: 'stateUpdate',
+          fragment: 'player',
+          player: [key, value]
+        })
+      })
+    })
+/*
+    this.player.events.listen('position', position => console.log('player position changed', position))
+    this.player.events.listen('matrix', matrix => console.log('player matrix changed', matrix))
+*/
   }
 }
 
