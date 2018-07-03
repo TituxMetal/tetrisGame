@@ -80,10 +80,18 @@ class ConnectionManager {
         })
       })
     })
-/*
-    this.player.events.listen('position', position => console.log('player position changed', position))
-    this.player.events.listen('matrix', matrix => console.log('player matrix changed', matrix))
-*/
+
+    const arena = local.arena;
+
+    ['matrix'].forEach(key => {
+      arena.events.listen(key, value => {
+        this.send({
+          type: 'stateUpdate',
+          fragment: 'arena',
+          arena: [key, value]
+        })
+      })
+    })
   }
 }
 
