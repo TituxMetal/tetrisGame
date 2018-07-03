@@ -17,8 +17,10 @@ class Tetris {
 
     this.context.scale(this.scale, this.scale)
     this.player.reset()
-    this.updateScore(this.player.score)
-    this.start()
+
+    this.player.events.listen('score', score => this.updateScore(score))
+
+    this.updateScore(this.score)
   }
 
   draw() {
