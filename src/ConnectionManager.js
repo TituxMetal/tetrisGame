@@ -6,6 +6,20 @@ class ConnectionManager {
     this.sessions = new Map
   }
 
+  broadcastSession(session) {
+    const clients = [...session.clients]
+
+    clients.forEach(client => {
+      client.send({
+        type: 'sessionBroadcast',
+        peers: {
+          you: client.id,
+          clients: clients.map(client => client.id)
+        }
+      })
+    })
+  }
+
   /*
     Generate a random ID
   */
@@ -55,6 +69,8 @@ class ConnectionManager {
     if (session.clients.size === 0) {
       this.sessions.delete(session.id)
     }
+
+    this.broadcastSession(session)
   }
 
   /*
@@ -80,6 +96,7 @@ class ConnectionManager {
     const session = this.sessions.get(id) || this.createSession(id)
     
     session.add(client)
+    this.broadcastSession(session)
   }
 }
 
