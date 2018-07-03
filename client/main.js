@@ -6,6 +6,7 @@ const localTetris = tetrisManager.createPlayer()
 const connectionManager = new ConnectionManager(tetrisManager)
 
 localTetris.element.classList.add('local')
+localTetris.start()
 connectionManager.connect('ws://titux.local:9000')
 
 document.addEventListener('keydown', event => {
