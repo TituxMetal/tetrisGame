@@ -1,9 +1,12 @@
+import Events from './Events'
+
 class Player {
   constructor(tetris) {
     this.arena = tetris.arena
     this.defaultInterval = 1000
     this.dropCounter = 0
     this.dropInterval = this.defaultInterval
+    this.events = new Events
     this.piece = tetris.piece
     this.matrix = this.piece.getRandomPiece()
     this.position = { x: 0, y: 0 }
@@ -14,6 +17,8 @@ class Player {
   drop() {
     this.position.y++
     
+    this.dropCounter = 0
+    
     if (this.arena.collide(this)) {
       this.position.y--
       this.arena.merge(this)
@@ -23,10 +28,11 @@ class Player {
       this.score += newScore
       this.dropInterval -= newScore
 
-      this.tetris.updateScore(this.score)
+      this.events.emit('score', this.score)
+      return
     }
 
-    this.dropCounter = 0
+    this.events.emit('position', this.position)
   }
 
   move(direction) {
@@ -34,7 +40,10 @@ class Player {
 
     if (this.arena.collide(this)) {
       this.position.x -= direction
+      return
     }
+
+    this.events.emit('position', this.position)
   }
 
   reset() {
@@ -46,12 +55,16 @@ class Player {
     this.position.x = arenaMiddle - pieceMiddle
 
     if (this.arena.collide(this)) {
-      this.arena.matrix.forEach(row => row.fill(0))
+      this.arena.clear()
 
       this.score = 0
       this.dropInterval = this.defaultInterval
-      this.tetris.updateScore()
+
+      this.events.emit('score', this.score)
     }
+
+    this.events.emit('position', this.position)
+    this.events.emit('matrix', this.matrix)
   }
 
   rotate(dir) {
@@ -70,6 +83,8 @@ class Player {
         return
       }
     }
+
+    this.events.emit('matrix', this.matrix)
   }
 
   rotateMatrix(dir) {
