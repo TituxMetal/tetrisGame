@@ -6,6 +6,17 @@ class ConnectionManager {
     this.sessions = new Map
   }
 
+  broadcastClient(client, data) {
+    const session = this.sessions.get(client.session.id)
+    if (!client.getSession()) {
+      throw new Error('Can not broadcast without session')
+    }
+
+    data.clientId = client.id;
+    [...session.clients].filter(item => item !== client)
+      .forEach(item => item.send(data))
+  }
+
   broadcastSession(session) {
     const clients = [...session.clients]
 
