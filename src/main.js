@@ -18,11 +18,11 @@ server.on('connection', connection => {
 
     switch (messageType) {
       case ('initSession'):
-        connectionManager.initSession(client)
+        connectionManager.initSession(client, data)
         console.log('initSession Ok')
         break
       case ('joinSession'):
-        connectionManager.joinSession(client, data.id)
+        connectionManager.joinSession(client, data)
         console.log('joinSession Ok')
         break
       case ('stateUpdate'):
