@@ -8,22 +8,28 @@ const connectionManager = new ConnectionManager()
 server.on('connection', connection => {
   const client = connectionManager.createClient(connection)
 
-  console.log('Connection established and new client created')
+  console.log('Connection established')
 
   connection.on('message', message => {
     const data = JSON.parse(message)
     const messageType = data.type
 
-    console.log(`Message received`, data)
-
     switch (messageType) {
       case ('initSession'):
         connectionManager.initSession(client, data)
-        console.log('initSession Ok')
+        console.log(
+          `A new client start a session
+          client id: ${client.id}
+          session id: ${client.session.id}`
+        )
         break
       case ('joinSession'):
         connectionManager.joinSession(client, data)
-        console.log('joinSession Ok')
+        console.log(
+          `A new client join a session
+          client id: ${client.id}
+          session id: ${client.session.id}`
+        )
         break
       case ('stateUpdate'):
         connectionManager.broadcastClient(client, data)
@@ -33,11 +39,13 @@ server.on('connection', connection => {
 
   connection.on('close', () => {
     connectionManager.disconnect(client)
-    
-    const sessionCount = connectionManager.sessions.size
 
+    const sessionCount = connectionManager.sessions.size
+  
     console.log(
-      `Client disconnected, there is now ${sessionCount} session${sessionCount > 1 ? 's' : ''}`
+      `Client disconnect
+      client id: ${client.id}
+      There is now ${sessionCount} session${sessionCount > 1 ? 's' : ''}`
     )
   })
 })
