@@ -52,10 +52,30 @@ class Tetris {
     this.start()
   }
 
+  serialize() {
+    return {
+      arena: {
+        matrix: this.arena.matrix
+      },
+      player: {
+        matrix: this.player.matrix,
+        position: this.player.position,
+        score: this.player.score
+      }
+    }
+  }
+
   start() {
     if (this.requestAnimationID === undefined) {
       this.requestAnimationID = requestAnimationFrame(this.update.bind(this))
     }
+  }
+
+  unserialize(state) {
+    this.arena = Object.assign(state.arena)
+    this.player = Object.assign(state.player)
+    this.updateScore(this.player.score)
+    this.draw()
   }
 
   update(time = 0) {
