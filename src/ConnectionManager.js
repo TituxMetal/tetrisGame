@@ -8,9 +8,13 @@ class ConnectionManager {
 
   broadcastClient(client, data) {
     const session = this.sessions.get(client.session.id)
+
     if (!client.getSession()) {
       throw new Error('Can not broadcast without session')
     }
+
+    const [prop, value] = data.state
+    client.state[data.fragment][prop] = value
 
     data.clientId = client.id;
     [...session.clients].filter(item => item !== client)
@@ -25,7 +29,12 @@ class ConnectionManager {
         type: 'sessionBroadcast',
         peers: {
           you: client.id,
-          clients: clients.map(client => client.id)
+          clients: clients.map(client => {
+            return {
+              id: client.id,
+              state: client.state
+            }
+          })
         }
       })
     })
@@ -87,10 +96,11 @@ class ConnectionManager {
   /*
     Create a new Session, add the Client to the Session, send a message to the client with the session ID
   */
-  initSession(client) {
+  initSession(client, data) {
     const session = this.createSession()
 
     session.add(client)
+    client.state = data.state
     client.send({ type: 'sessionInitialized', id: session.id })
   }
 
@@ -99,14 +109,15 @@ class ConnectionManager {
     If the given id is present in the sessions list then add the Client to Session
     Add the Client in clients
   */
-  joinSession(client, id) {
+  joinSession(client, data) {
     if (client.getSession() !== null) {
       throw new Error('Client already in session')
     }
 
-    const session = this.sessions.get(id) || this.createSession(id)
+    const session = this.sessions.get(data.id) || this.createSession(data.id)
     
     session.add(client)
+    client.state = data.state
     this.broadcastSession(session)
   }
 }
