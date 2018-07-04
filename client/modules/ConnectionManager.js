@@ -40,6 +40,10 @@ class ConnectionManager {
     if (data.type === 'sessionBroadcast') {
       this.updateManager(data.peers)
     }
+
+    if (data.type === 'stateUpdate') {
+      this.updatePeer(data.clientId, data.fragment, data.state)
+    }
   }
 
   send(data) {
@@ -68,6 +72,23 @@ class ConnectionManager {
     })
   }
 
+  updatePeer(id, fragment, [prop, value]) {
+    if (!this.peers.has(id)) {
+      console.error('Client does not exist', id)
+
+      return
+    }
+
+    const tetris = this.peers.get(id)
+    tetris[fragment][prop] = value
+
+    if (prop === 'score') {
+      return tetris.updateScore(value)
+    }
+
+    tetris.draw()
+  }
+
   watchEvents() {
     const local = this.localTetris
     const player = local.player;
@@ -76,7 +97,7 @@ class ConnectionManager {
         this.send({
           type: 'stateUpdate',
           fragment: 'player',
-          player: [key, value]
+          state: [key, value]
         })
       })
     })
@@ -88,7 +109,7 @@ class ConnectionManager {
         this.send({
           type: 'stateUpdate',
           fragment: 'arena',
-          arena: [key, value]
+          state: [key, value]
         })
       })
     })
