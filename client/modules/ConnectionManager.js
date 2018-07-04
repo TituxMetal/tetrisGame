@@ -15,19 +15,19 @@ class ConnectionManager {
     })
 
     this.connection.addEventListener('message', event => {
-      console.log('Received message', event.data)
       this.receive(event.data)
     })
   }
 
   initSession() {
     const sessionId = window.location.hash.split('#')[1]
+    const state = this.localTetris.serialize()
 
     if (sessionId) {
-      return this.send({ type: 'joinSession', id: sessionId })
+      return this.send({ type: 'joinSession', id: sessionId, state })
     }
 
-    this.send({ type: 'initSession' })
+    this.send({ type: 'initSession', state })
   }
 
   receive(message) {
@@ -48,24 +48,24 @@ class ConnectionManager {
 
   send(data) {
     const message = JSON.stringify(data)
-    console.log(`Sending message ${message}`)
 
     this.connection.send(message)
   }
 
   updateManager(peers) {
     const me = peers.you
-    const clients = peers.clients.filter(id => me !== id)
+    const clients = peers.clients.filter(client => me !== client.id)
 
-    clients.forEach(id => {
-      if (!this.peers.has(id)) {
+    clients.forEach(client => {
+      if (!this.peers.has(client.id)) {
         const tetris = this.tetrisManager.createPlayer()
-        this.peers.set(id, tetris)
+        tetris.unserialize(client.state)
+        this.peers.set(client.id, tetris)
       }
     });
 
     [...this.peers.entries()].forEach(([id, tetris]) => {
-      if (clients.indexOf(id) === -1) {
+      if (!clients.some(client => client.id === id)) {
         this.tetrisManager.removePlayer(tetris)
         this.peers.delete(id)
       }
@@ -75,7 +75,6 @@ class ConnectionManager {
   updatePeer(id, fragment, [prop, value]) {
     if (!this.peers.has(id)) {
       console.error('Client does not exist', id)
-
       return
     }
 
@@ -92,6 +91,7 @@ class ConnectionManager {
   watchEvents() {
     const local = this.localTetris
     const player = local.player;
+    
     ['position', 'matrix', 'score'].forEach(key => {
       player.events.listen(key, value => {
         this.send({
