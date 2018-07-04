@@ -70,6 +70,12 @@ class ConnectionManager {
         this.peers.delete(id)
       }
     })
+
+    const sorted = peers.clients.map(client => {
+      return this.peers.get(client.id) || this.localTetris
+    })
+    
+    this.tetrisManager.sortPlayers(sorted)
   }
 
   updatePeer(id, fragment, [prop, value]) {
