@@ -7,7 +7,10 @@ const connectionManager = new ConnectionManager(tetrisManager)
 
 localTetris.element.classList.add('local')
 localTetris.start()
-connectionManager.connect('ws://titux.local:9000')
+
+const host = location.origin.replace(/^http/, 'ws')
+
+connectionManager.connect(host)
 
 document.addEventListener('keydown', event => {
   switch (event.keyCode) {
