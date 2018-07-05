@@ -1,11 +1,20 @@
+const express = require('express')
+const path = require('path')
 const WebSocketServer = require('ws').Server
 
 const ConnectionManager = require('./ConnectionManager')
 
-const server = new WebSocketServer({ port: 9000 })
+const port = process.env.PORT || 5000
+const index = path.resolve(__dirname, 'dist', 'index.html')
+const server = express()
+  .use(express.static('dist'))
+  .use((req, res) => res.sendFile(index))
+  .listen(port, () => console.log(`Server running on port ${port}`))
+
+const wss = new WebSocketServer({ server })
 const connectionManager = new ConnectionManager()
 
-server.on('connection', connection => {
+wss.on('connection', connection => {
   const client = connectionManager.createClient(connection)
 
   console.log('Connection established')
