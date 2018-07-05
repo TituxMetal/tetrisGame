@@ -6,9 +6,11 @@
   "description": "An implementation of the famous Tetris game. I created it entirely in pure Javascript, I use Webpack as the only dependency in development.",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --mode production",
-    "build-dev": "webpack --mode development",
-    "start": "webpack-dev-server ./client/main.js --mode development --content-base ./dist --host 0.0.0.0 --disable-host-check true --watch-content-base"
+    "build": "webpack --mode production ./client/main.js",
+    "build-dev": "webpack --mode development ./client/main.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build",
+    "start": "node ./src/main.js",
+    "start-dev": "webpack-dev-server ./client/main.js --mode development --content-base ./dist --host 0.0.0.0 --disable-host-check true --watch-content-base"
   },
   "devDependencies": {
     "webpack": "^4.6.0",
@@ -16,6 +18,7 @@
     "webpack-dev-server": "^3.1.3"
   },
   "dependencies": {
+    "express": "^4.16.3",
     "ws": "^5.2.1"
   }
 }
